@@ -1,0 +1,38 @@
+name: PHP_CodeSniffer
+
+on: pull_request
+
+jobs:
+  phpcs:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: composer:v2
+        env:
+          fail-fast: true
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+      - name: Install composer dependencies
+        run: composer install --no-progress
+
+      - name: PHPCS check
+        uses: chekalsky/phpcs-action@v1
+        with:
+          enable_warnings: false
+          phpcs_bin_path: './vendor/bin/phpcs'
