@@ -21,6 +21,7 @@ PATH_DIRS=(
   "$HOME/bin"
   "$HOME/.local/bin"
   "$HOME/.composer/vendor/bin"
+  "$HOME/Projects/bin"
 )
 for PATH_DIR in ${PATH_DIRS[@]}; do
   if [ -d "$PATH_DIR" ]; then
