@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+files=${1:-*.svg}
+to=${2:-png}
+resolution=${3:-2048x}
+
+set -x
+
+mkdir -p "./$to" 
+for i in $files ; do 
+  convert -antialias -background transparent -density 600 -resize $resolution "$i" "./$to/${i%.*}.$to" 
+done
