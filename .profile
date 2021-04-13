@@ -22,6 +22,7 @@ PATH_DIRS=(
   "$HOME/.local/bin"
   "$HOME/.composer/vendor/bin"
   "$HOME/Projects/bin"
+  "$HOME/Library/Python/3.9/lib/python/site-packages" # MacOS-specific.
 )
 for PATH_DIR in ${PATH_DIRS[@]}; do
   if [ -d "$PATH_DIR" ]; then
