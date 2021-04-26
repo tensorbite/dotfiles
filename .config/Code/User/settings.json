@@ -2,7 +2,7 @@
   "composer.executablePath": "$HOME/.local/bin/composer",
   "debug.console.fontSize": 15,
   "drupalCheck.executablePath": "$HOME/.composer/vendor/bin/drupal-check",
-  "editor.fontFamily": "JetBrains Mono",
+  "editor.fontFamily": "JetBrains Mono, Fira Code, Ubuntu Mono, Consolas",
   "editor.fontLigatures": true,
   "editor.fontSize": 15,
   "editor.renderWhitespace": "selection",
