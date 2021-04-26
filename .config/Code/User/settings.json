@@ -10,7 +10,6 @@
   "editor.selectionClipboard": false,
   "editor.suggestSelection": "first",
   "editor.tabSize": 2,
-  "phpcs.executablePath": "$HOME/.composer/vendor/bin/phpcs",
   "phpcs.standard": "Drupal",
   "terminal.integrated.fontSize": 15,
   "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
