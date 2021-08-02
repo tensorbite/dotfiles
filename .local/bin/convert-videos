@@ -11,7 +11,7 @@ outputDirectory="./converted"
 videoCodec="h264"       # "h264", "h264_nvenc", "libx264"
 videoContainer="mkv"    # "mp4", "mkv"
 videoTune="film"        # "film", "animation", "stillimage"
-audioCodec="libvorbis"  # "aac", "libmp3lame", "libvorbis"
+audioCodec="aac"  # "aac", "libmp3lame", "libvorbis"
 audioBitrate="192k"     # "aac", "libmp3lame", "libvorbis"
 audioSampleRate="48000" # Audio sampling rate (in Hz)
 
