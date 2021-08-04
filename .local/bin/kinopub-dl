@@ -1,0 +1,39 @@
+#!/usr/bin/python3
+
+import click
+import feedparser
+import subprocess
+import re
+
+@click.command(help='Downloads all series of certain show from kino.pub by its podcast URL.')
+@click.option('--url', help='Kino.pub public podcast URL.', prompt='Enter podcast public URL', required=True)
+@click.option('--season', help='Limit downloads to certain season. "-1" means all seasons.', prompt='Enter season number (-1 == all)', required=True, type=int, default=-1)
+def download(url: str, season: int):
+    feed = feedparser.parse(url)
+    parsedData = []
+    for item in feed.entries:
+        # Yeah, regexp, sorry.
+        parsedSeasonEpisode = re.findall('^s(\d+)e(\d+)', item.title)
+        parsedData.insert(0, dict({
+            'title': item.title,
+            'resolution': item.summary,
+            'season': int(parsedSeasonEpisode[0][0] or 0),
+            'episode': int(parsedSeasonEpisode[0][1] or 0),
+            'ext': 'mp4',
+            'url': next(x for x in item['links'] if x['type'] == 'video/mp4')['href']
+        }))
+    # Free up memory.
+    del feed
+    # If season selected, then filter all items.
+    if(season != -1):
+        # Leave only items with certain season.
+        parsedData = list(filter(lambda x: x['season'] == season, parsedData))
+        # Raise error if no episodes left to download.
+        if(not parsedData):
+            raise click.UsageError(f'No episodes found for {season} season.')
+    if click.confirm(f'You are going to download {len(parsedData)} episodes. Are you sure?', default=True):
+        for item in parsedData:
+            subprocess.run(f'wget -q --show-progress --continue -O "{item["title"]} [{item["resolution"]}].{item["ext"]}" "{item["url"]}"', shell=True)
+
+if __name__ == '__main__':
+    download()
