@@ -6,8 +6,8 @@ import subprocess
 import re
 
 @click.command(help='Downloads all series of certain show from kino.pub by its podcast URL.')
-@click.option('--url', help='Kino.pub public podcast URL.', prompt='Enter podcast public URL', required=True)
-@click.option('--season', help='Limit downloads to certain season. "-1" means all seasons.', prompt='Enter season number (-1 == all)', required=True, type=int, default=-1)
+@click.option('--url', help='Kino.pub public podcast URL.', prompt='✔ Enter podcast public URL', required=True)
+@click.option('--season', help='Limit downloads to certain season. "-1" means all seasons.', prompt='✔ Enter season number', required=True, type=int, default=-1)
 def download(url: str, season: int):
     feed = feedparser.parse(url)
     parsedData = []
@@ -31,7 +31,7 @@ def download(url: str, season: int):
         # Raise error if no episodes left to download.
         if(not parsedData):
             raise click.UsageError(f'No episodes found for {season} season.')
-    if click.confirm(f'You are going to download {len(parsedData)} episodes. Are you sure?', default=True):
+    if click.confirm(f'🤝 Confirm downloading [{len(parsedData)}] episodes', default=True):
         for item in parsedData:
             subprocess.run(f'wget -q --show-progress --continue -O "{item["title"]} [{item["resolution"]}].{item["ext"]}" "{item["url"]}"', shell=True)
 
