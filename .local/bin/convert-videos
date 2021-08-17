@@ -16,7 +16,7 @@ audioBitrate="192k"     # "aac", "libmp3lame", "libvorbis"
 audioSampleRate="48000" # Audio sampling rate (in Hz)
 
 ###> Progress-bar settings.
-export BAR_SIZE_RATIO=0.8
+export BAR_SIZE_RATIO=0.99
 export BAR_FILENAME_LENGTH=32
 ###< Progress-bar settings.
 
