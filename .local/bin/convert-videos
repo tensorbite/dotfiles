@@ -2,7 +2,7 @@
 
 ###> Install dependencies.
 [ ! $(command -v ffmpeg) ] && sudo apt install -y ffmpeg
-[ ! $(command -v ffmpeg-bar) ] && npm install --global ffmpeg-progressbar-cli
+[ ! $(command -v ffpb) ] && pip3 install ffpb --user # Works exactly like ffmpeg, but shows progress bar.
 ###< Install dependencies.
 
 inputFiles="*.*"
@@ -22,5 +22,5 @@ export BAR_FILENAME_LENGTH=32
 
 mkdir -p "$outputDirectory"
 for inputFile in $inputFiles; do
-  ffmpeg-bar -y -i "$inputFile" -c:v ${videoCodec} -preset slow -tune ${videoTune} -c:a ${audioCodec} -b:a ${audioBitrate} -ar ${audioSampleRate} -af loudnorm=I=-23:LRA=7:tp=-2 "${outputDirectory}/${inputFile%.*} [${videoCodec}].${videoContainer}";
+  ffpb -y -i "$inputFile" -c:v ${videoCodec} -preset slow -tune ${videoTune} -c:a ${audioCodec} -b:a ${audioBitrate} -ar ${audioSampleRate} -af loudnorm=I=-23:LRA=7:tp=-2 "${outputDirectory}/${inputFile%.*} [${videoCodec}].${videoContainer}";
 done
