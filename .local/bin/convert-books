@@ -1,0 +1,32 @@
+#!/usr/bin/python3
+
+import click
+import subprocess
+import os
+from pathlib import Path
+
+@click.command(help='Converts all books in directory to needed format.')
+@click.argument('files', required=True, type=click.Path(exists=True), nargs=-1)
+@click.option(
+  '--target-format', '--format', '-f',
+  type=click.Choice(['mobi', 'epub', 'fb2', 'azw3', 'txt'], case_sensitive=False),
+  required=True,
+  help='File format that books need to be converted to.',
+  prompt='✔ Specify target format',
+)
+@click.option(
+  '--target-dir', '--dir', '-d',
+  type=str,
+  help='Directory that converted books need to be saved to.',
+)
+def convert(files, target_format: str, target_dir: str):
+  for filename in files:
+    if not target_dir:
+      target_dir = target_format
+    if not os.path.exists(target_dir):
+      click.secho(f'[INFO] Creating "{target_dir}" directory...', fg='green')
+      os.makedirs(target_dir)
+    subprocess.run(f'ebook-convert "{filename}" "{target_dir}/{Path(filename).stem}.{target_format}"', shell=True)
+
+if __name__ == '__main__':
+    convert()
