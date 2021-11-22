@@ -11,6 +11,7 @@ $config['devel.settings']['devel_dumper'] = 'var_dumper';
 $config['system.performance']['cache']['page']['max_age'] = 24 * 3600;
 $config['system.performance']['css'] = ['preprocess' => FALSE, 'gzip' => FALSE];
 $config['system.performance']['js'] = ['preprocess' => FALSE, 'gzip' => FALSE];
+$config['advagg.settings']['enabled'] = FALSE;
 
 /* Memcache ==================================================================*/
 
