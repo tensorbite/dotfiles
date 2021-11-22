@@ -8,7 +8,8 @@ $config['devel.settings']['error_handlers'][1] = 1; // Standard drupal errors.
 $config['devel.settings']['devel_dumper'] = 'var_dumper';
 
 /* Performance ===============================================================*/
-$config['system.performance']['cache']['page']['max_age'] = 24 * 3600;
+// Set cache to 1 day. The 'max_age' value is in seconds.
+$config['system.performance']['cache']['page']['max_age'] = 24 * 60 * 60;
 $config['system.performance']['css'] = ['preprocess' => FALSE, 'gzip' => FALSE];
 $config['system.performance']['js'] = ['preprocess' => FALSE, 'gzip' => FALSE];
 $config['advagg.settings']['enabled'] = FALSE;
