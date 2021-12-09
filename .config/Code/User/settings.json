@@ -19,7 +19,7 @@
   "workbench.iconTheme": "material-icon-theme",
   "workbench.statusBar.visible": true,
   "workbench.colorCustomizations": {  
-    "editorRuler.foreground": "#222",
+    "editorRuler.foreground": "#303030",
   },
   "files.associations": {
     "Vagrantfile": "ruby",
