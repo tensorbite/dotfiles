@@ -6,43 +6,47 @@ import subprocess
 import re
 import os
 
-@click.command(help='Downloads all series of certain show from kino.pub by its podcast URL.')
-@click.option('--url', help='Kino.pub public podcast URL.', prompt='✔ Enter podcast public URL', required=True)
+@click.command(help='Downloads all series of certain show from kino.pub by PODCAST_URL.')
+@click.argument('podcast_url')
 @click.option('--season', help='Limit downloads to certain season. "-1" means all seasons.', prompt='✔ Enter season number', required=True, type=int, default=-1)
 @click.option('--dir', help='Output directory. Feed title by default.', default=None)
-def download(url: str, season: int, dir: str):
-    feed = feedparser.parse(url)
-    parsedData = []
+def download(podcast_url: str, season: int, dir: str):
+    feed = feedparser.parse(podcast_url)
+    parsed_data = []
     for item in feed.entries:
         # Yeah, regexp, sorry.
-        parsedSeasonEpisode = re.findall('^s(\d+)e(\d+)', item.title)
-        parsedData.insert(0, dict({
+        parsed_season_episode = re.findall('^s(\d+)e(\d+)', item.title)
+        parsed_data.insert(0, dict({
             'title': item.title,
             'resolution': item.summary,
-            'season': int(parsedSeasonEpisode[0][0] or 0),
-            'episode': int(parsedSeasonEpisode[0][1] or 0),
+            'season': int(parsed_season_episode[0][0] or 0),
+            'episode': int(parsed_season_episode[0][1] or 0),
             'ext': 'mp4',
             'url': next(x for x in item['links'] if x['type'] == 'video/mp4')['href']
         }))
+
     # Use feed title as output dir by default.
     if dir is None:
         dir = feed.channel.title
+
     # Free up memory.
     del feed
+
     # If season selected, then filter all items.
-    if(season != -1):
+    if season != -1:
         # Leave only items with certain season.
-        parsedData = list(filter(lambda x: x['season'] == season, parsedData))
+        parsed_data = list(filter(lambda x: x['season'] == season, parsed_data))
         # Raise error if no episodes left to download.
-        if(not parsedData):
+        if not parsed_data:
             raise click.UsageError(f'No episodes found for {season} season.')
-    if click.confirm(f'🤝 Confirm downloading [{len(parsedData)}] episodes', default=True):
+
+    if click.confirm(f'🤝 Confirm downloading [{len(parsed_data)}] episodes', default=True):
         if not os.path.exists(dir):
             print(f'Creating "{dir}" directory...')
             os.makedirs(dir)
-        for index, item in enumerate(parsedData):
+        for index, item in enumerate(parsed_data):
             episode=index
-            total_episodes=len(parsedData)
+            total_episodes=len(parsed_data)
             percentage=str(int((episode/total_episodes)*100)).rjust(2, ' ')
             filename=f'{item["title"]} [{item["resolution"]}].{item["ext"]}'
             print(f'[ {percentage}% | {episode}/{total_episodes} ] {filename}')
