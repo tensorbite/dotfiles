@@ -2,6 +2,10 @@ if [ -n "$BASH_VERSION" ] && [ -f "$HOME/.bashrc" ]; then
   source "$HOME/.bashrc"
 fi
 
+######## Aliases ###############################################################
+alias node-modules-ls='find . -name "node_modules" -type d -prune -print | xargs du -chs'
+alias node-modules-rm='find . -name "node_modules" -type d -prune -exec rm -rf "{}" +'
+
 ######## Load local config #####################################################
 if [ -f "$HOME/.profile.local" ]; then
   source "$HOME/.profile.local"
