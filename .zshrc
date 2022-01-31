@@ -14,6 +14,6 @@ antigen bundle pipenv
 antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle zsh-users/zsh-completions
 
-antigen theme bira
+antigen theme simple
 
 antigen apply
