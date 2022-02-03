@@ -25,6 +25,9 @@ def download(podcast_url: str, season: int, dir: str):
             'url': next(x for x in item['links'] if x['type'] == 'video/mp4')['href']
         }))
 
+    # Sort parsed links by title.
+    parsed_data.sort(key=lambda x:x['title'])
+
     # Use feed title as output dir by default.
     if dir is None:
         dir = feed.channel.title
