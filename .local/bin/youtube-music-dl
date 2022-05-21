@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 ###> Install dependencies.
-[ ! $(command -v youtube-dl) ] && pip3 install youtube-dl
+[ ! $(command -v ffmpeg) ] && sudo apt install -y -qq ffmpeg
 [ ! $(command -v AtomicParsley) ] && sudo apt install -y -qq atomicparsley
+[ ! $(command -v yt-dlp) ] && pip3 install yt-dlp
 ###< Install dependencies.
 
 ###> Colors
@@ -26,4 +27,4 @@ if [ ! -f "$cookiesFile" ]; then
   exit 1
 fi
 
-youtube-dl --cookies "$cookiesFile" -f bestaudio --extract-audio --embed-thumbnail --add-metadata --audio-format m4a --output="%(release_year)s - %(playlist)s/%(playlist_index)s. %(artist)s - %(title)s.%(ext)s" $@
+yt-dlp --cookies "$cookiesFile" -f bestaudio --extract-audio --embed-thumbnail --add-metadata --audio-format m4a --output="%(release_year)s - %(playlist)s/%(playlist_index)s. %(artist)s - %(title)s.%(ext)s" $@
