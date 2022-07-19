@@ -16,7 +16,7 @@ export NVM_DIR="${HOME}/.nvm"
 if [ -s "$NVM_DIR/nvm.sh" ] ; then
   source "$NVM_DIR/nvm.sh"
   if [ -x "$(command -v npm)" ]; then
-    PATH="$PATH:$(npm config --global get prefix)/bin"
+    PATH="$PATH:$(npm config --location=global get prefix)/bin"
   fi
 fi
 
