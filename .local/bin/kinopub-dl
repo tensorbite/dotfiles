@@ -14,7 +14,6 @@ def download(url: str, season: int, dir: str):
     feed = feedparser.parse(url)
     parsed_data = []
     for item in feed['entries']:
-        a = 12
         # Yeah, regexp, sorry.
         parsed_season_episode = re.findall('^s(\d+)e(\d+)', item['title'])
         parsed_data.insert(0, dict({
