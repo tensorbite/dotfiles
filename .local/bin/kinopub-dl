@@ -7,18 +7,19 @@ import re
 import os
 
 @click.command(help='Downloads all series of certain show from kino.pub by PODCAST_URL.')
-@click.argument('podcast_url')
+@click.argument('url')
 @click.option('--season', help='Limit downloads to certain season. "-1" means all seasons.', prompt='✔ Enter season number', required=True, type=int, default=-1)
 @click.option('--dir', help='Output directory. Feed title by default.', default=None)
-def download(podcast_url: str, season: int, dir: str):
-    feed = feedparser.parse(podcast_url)
+def download(url: str, season: int, dir: str):
+    feed = feedparser.parse(url)
     parsed_data = []
-    for item in feed.entries:
+    for item in feed['entries']:
+        a = 12
         # Yeah, regexp, sorry.
-        parsed_season_episode = re.findall('^s(\d+)e(\d+)', item.title)
+        parsed_season_episode = re.findall('^s(\d+)e(\d+)', item['title'])
         parsed_data.insert(0, dict({
-            'title': item.title,
-            'resolution': item.summary,
+            'title': item['title'],
+            'resolution': item['summary'],
             'season': int(parsed_season_episode[0][0] or 0),
             'episode': int(parsed_season_episode[0][1] or 0),
             'ext': 'mp4',
@@ -30,7 +31,7 @@ def download(podcast_url: str, season: int, dir: str):
 
     # Use feed title as output dir by default.
     if dir is None:
-        dir = feed.channel.title
+        dir = feed['feed']['title']
 
     # Free up memory.
     del feed
