@@ -7,20 +7,23 @@ import re
 import os
 
 @click.command(help='Downloads all series of certain show from kino.pub by PODCAST_URL.')
-@click.argument('url')
+@click.argument('podcast_url')
 @click.option('--season', help='Limit downloads to certain season. "-1" means all seasons.', prompt='✔ Enter season number', required=True, type=int, default=-1)
 @click.option('--dir', help='Output directory. Feed title by default.', default=None)
-def download(url: str, season: int, dir: str):
-    feed = feedparser.parse(url)
+@click.option('--short-titles', default=True)
+def download(podcast_url: str, season: int, dir: str, short_titles: bool):
+    feed = feedparser.parse(podcast_url)
     parsed_data = []
-    for item in feed['entries']:
+    for item in feed.entries:
         # Yeah, regexp, sorry.
-        parsed_season_episode = re.findall('^s(\d+)e(\d+)', item['title'])
+        parsed_season_episode = re.findall('^s(\d+)e(\d+)', item.title)
+        season = int(parsed_season_episode[0][0] or 0)
+        episode = int(parsed_season_episode[0][1] or 0)
         parsed_data.insert(0, dict({
-            'title': item['title'],
-            'resolution': item['summary'],
-            'season': int(parsed_season_episode[0][0] or 0),
-            'episode': int(parsed_season_episode[0][1] or 0),
+            'title': ' - '.join([feed.channel.title, f's{season}e{episode}']) if short_titles else item.title,
+            'resolution': item.summary,
+            'season': season,
+            'episode': episode,
             'ext': 'mp4',
             'url': next(x for x in item['links'] if x['type'] == 'video/mp4')['href']
         }))
@@ -30,7 +33,7 @@ def download(url: str, season: int, dir: str):
 
     # Use feed title as output dir by default.
     if dir is None:
-        dir = feed['feed']['title']
+        dir = feed.channel.title
 
     # Free up memory.
     del feed
