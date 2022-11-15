@@ -17,8 +17,8 @@ def download(podcast_url: str, season: int, dir: str, short_titles: bool):
     for item in feed.entries:
         # Yeah, regexp, sorry.
         parsed_season_episode = re.findall('^s(\d+)e(\d+)', item.title)
-        season = int(parsed_season_episode[0][0] or 0)
-        episode = int(parsed_season_episode[0][1] or 0)
+        season = parsed_season_episode[0][0] or '0'
+        episode = parsed_season_episode[0][1] or '0'
         parsed_data.insert(0, dict({
             'title': ' - '.join([feed.channel.title, f's{season}e{episode}']) if short_titles else item.title,
             'resolution': item.summary,
