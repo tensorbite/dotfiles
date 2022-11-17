@@ -17,13 +17,13 @@ def download(podcast_url: str, season: int, dir: str, short_titles: bool):
     for item in feed.entries:
         # Yeah, regexp, sorry.
         parsed_season_episode = re.findall('^s(\d+)e(\d+)', item.title)
-        season = parsed_season_episode[0][0] or '0'
-        episode = parsed_season_episode[0][1] or '0'
-        parsed_data.insert(0, dict({
-            'title': ' - '.join([feed.channel.title, f's{season}e{episode}']) if short_titles else item.title,
+        parsed_season = parsed_season_episode[0][0] or '0'
+        parsed_episode = parsed_season_episode[0][1] or '0'
+        parsed_data.append(dict({
+            'title': ' - '.join([feed.channel.title, f's{parsed_season}e{parsed_episode}']) if short_titles else item.title,
             'resolution': item.summary,
-            'season': season,
-            'episode': episode,
+            'season': parsed_season,
+            'episode': parsed_episode,
             'ext': 'mp4',
             'url': next(x for x in item['links'] if x['type'] == 'video/mp4')['href']
         }))
@@ -41,7 +41,7 @@ def download(podcast_url: str, season: int, dir: str, short_titles: bool):
     # If season selected, then filter all items.
     if season != -1:
         # Leave only items with certain season.
-        parsed_data = list(filter(lambda x: x['season'] == season, parsed_data))
+        parsed_data[:] = list(filter(lambda x: int(x['season']) == int(season), parsed_data))
         # Raise error if no episodes left to download.
         if not parsed_data:
             raise click.UsageError(f'No episodes found for {season} season.')
