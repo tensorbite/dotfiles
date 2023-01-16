@@ -69,7 +69,7 @@ def download(podcast_url: str, seasons: str, dir: str, append_show_name: bool, a
     parsed_data.sort(key=lambda x:x.weight)
 
     # If seasons are selected, then filter items.
-    if '-1' not in seasons_list:
+    if -1 not in seasons_list:
         # Leave only episodes for needed seasons.
         parsed_data[:] = list(filter(lambda x: int(f'{x.season}') in seasons_list, parsed_data))
         # Raise error if no episodes left to download.
