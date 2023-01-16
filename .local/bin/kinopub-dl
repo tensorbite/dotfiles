@@ -41,23 +41,21 @@ class Episode:
             os.makedirs(dir)
         filename=self.get_title(series, title, resolution, extension=True)
         path=f'{dir}/{filename}'
-        subprocess.run(f'wget -q --show-progress --continue -O "{path}" "{self.link}"', shell=True)
+        #subprocess.run(f'wget -q --show-progress --continue -O "{path}" "{self.link}"', shell=True)
+        subprocess.run(f'curl -# -L -o "{path}" -C - "{self.link}"', shell=True)
 
 
 @click.command(help='Downloads all series of certain show from kino.pub by PODCAST_URL.')
 @click.argument('podcast_url')
-@click.option('--season', help='Limit downloads to certain season. "-1" means all seasons.', prompt='✔ Enter season number', required=True, type=int, default=-1)
+@click.option('--seasons', help='Limit downloads to certain seasons (separated by comma). "-1" means all seasons.', prompt='✔ Enter seasons (separated by comma)', required=True, type=str, default='-1')
 @click.option('--dir', help='Output directory. Feed title by default.', default=None)
 @click.option('--append-show-name', default=True, help='Appends the show name (feed title) to episode filename.')
 @click.option('--append-title', default=False, help='Appends human-readable title to episode filename if exists.')
 @click.option('--append-resolution', default=True, help='Appends video resolution to episode filemane.')
-def download(podcast_url: str, season: int, dir: str, append_show_name: bool, append_title: bool, append_resolution: bool):
+def download(podcast_url: str, seasons: str, dir: str, append_show_name: bool, append_title: bool, append_resolution: bool):
+    seasons_list = [int(x.strip()) for x in seasons.split(',')]
     feed = feedparser.parse(podcast_url)
-
-    # Use feed title as output dir by default.
-    if dir is None:
-        dir = feed.channel.title
-
+    dir = feed.channel.title if dir is None else dir # Use feed title as output dir by default.
     parsed_data: list(Episode) = []
     for item in feed.entries:
         parsed_data.append(Episode(
@@ -70,13 +68,13 @@ def download(podcast_url: str, season: int, dir: str, append_show_name: bool, ap
     # Sort parsed episodes by weight (season+episode).
     parsed_data.sort(key=lambda x:x.weight)
 
-    # If season selected, then filter all items.
-    if season != -1:
-        # Leave only items with certain season.
-        parsed_data[:] = list(filter(lambda x: int(x['season']) == int(season), parsed_data))
+    # If seasons are selected, then filter items.
+    if '-1' not in seasons_list:
+        # Leave only episodes for needed seasons.
+        parsed_data[:] = list(filter(lambda x: int(f'{x.season}') in seasons_list, parsed_data))
         # Raise error if no episodes left to download.
         if not parsed_data:
-            raise click.UsageError(f'No episodes found for {season} season.')
+            raise click.UsageError(f'No episodes found for {seasons} season.')
 
     if click.confirm(f'🤝 Confirm downloading [{len(parsed_data)}] episodes', default=True):
         for index, item in enumerate(parsed_data):
