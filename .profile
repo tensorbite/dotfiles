@@ -27,6 +27,7 @@ PATH_DIRS=(
   "$HOME/.composer/vendor/bin"
   "$HOME/Projects/bin"
   "$HOME/Library/Python/3.9/lib/python/site-packages" # MacOS-specific.
+  "$HOME/miniconda3/bin"
   "/usr/local/anaconda/bin"
 )
 for PATH_DIR in ${PATH_DIRS[@]}; do
