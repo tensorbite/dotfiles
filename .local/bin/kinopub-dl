@@ -36,14 +36,10 @@ class Episode:
 
     def download(self, dir: str, series: bool, title: bool, resolution: bool):
         ''' Downloads current episode. '''
-        if not os.path.exists(dir):
-            print(f'Creating "{dir}" directory...')
-            os.makedirs(dir)
         filename=self.get_title(series, title, resolution, extension=True)
-        path=f'{dir}/{filename}'
-        #subprocess.run(f'wget -q --show-progress --continue -O "{path}" "{self.link}"', shell=True)
-        subprocess.run(f'curl -# -L -o "{path}" -C - "{self.link}"', shell=True)
-
+        file_path=f'{dir}/{filename}'
+        print(f'[DOWNLOAD] {file_path}')
+        subprocess.run(f'curl -# --retry 10 --retry-all-errors --create-dirs -L -o "{file_path}" -C - "{self.link}"', shell=True)
 
 @click.command(help='Downloads all series of certain show from kino.pub by PODCAST_URL.')
 @click.argument('podcast_url')
@@ -55,32 +51,32 @@ class Episode:
 def download(podcast_url: str, seasons: str, dir: str, append_show_name: bool, append_title: bool, append_resolution: bool):
     seasons_list = [int(x.strip()) for x in seasons.split(',')]
     feed = feedparser.parse(podcast_url)
+    print(f'[INFO] "{feed.channel.title}" feed was fetched.')
     dir = feed.channel.title if dir is None else dir # Use feed title as output dir by default.
-    parsed_data: list(Episode) = []
+    episodes: list(Episode) = []
     for item in feed.entries:
-        parsed_data.append(Episode(
+        episodes.append(Episode(
             series=feed['channel']['title'],
             title=item['title'],
             resolution=item['summary'],
-            link=next(x for x in item['links'] if x['type'] == 'video/mp4')['href']
+            link=next(x for x in item['links'] if x['type'] == 'video/mp4')['href'],
         ))
 
     # Sort parsed episodes by weight (season+episode).
-    parsed_data.sort(key=lambda x:x.weight)
+    episodes.sort(key=lambda x:x.weight)
 
     # If seasons are selected, then filter items.
     if -1 not in seasons_list:
+        print(f'[INFO] {len(episodes)} total episodes found.')
         # Leave only episodes for needed seasons.
-        parsed_data[:] = list(filter(lambda x: int(f'{x.season}') in seasons_list, parsed_data))
+        episodes[:] = list(filter(lambda x: int(f'{x.season}') in seasons_list, episodes))
         # Raise error if no episodes left to download.
-        if not parsed_data:
+        if not episodes:
             raise click.UsageError(f'No episodes found for {seasons} season.')
+        print(f'[INFO] {len(episodes)} episodes selected to download.')
 
-    if click.confirm(f'🤝 Confirm downloading [{len(parsed_data)}] episodes', default=True):
-        for index, item in enumerate(parsed_data):
-            total_episodes=len(parsed_data)
-            percentage=str(int((index/total_episodes)*100)).rjust(2, ' ')
-            print(f'[ {percentage}% | {index + 1} of {total_episodes} | S{item.season}E{item.episode} ]')
+    if click.confirm(f'🤝 Confirm downloading [{len(episodes)}] episodes', default=True):
+        for item in episodes:
             item.download(dir=dir, series=append_show_name, title=append_title, resolution=append_resolution)
 
 if __name__ == '__main__':
