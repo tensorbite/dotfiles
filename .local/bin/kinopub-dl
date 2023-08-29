@@ -46,7 +46,7 @@ class Episode:
 @click.option('--seasons', help='Limit downloads to certain seasons (separated by comma). "-1" means all seasons.', prompt='✔ Enter seasons (separated by comma)', required=True, type=str, default='-1')
 @click.option('--dir', help='Output directory. Feed title by default.', default=None)
 @click.option('--append-show-name', default=True, help='Appends the show name (feed title) to episode filename.')
-@click.option('--append-title', default=False, help='Appends human-readable title to episode filename if exists.')
+@click.option('--append-title', default=True, help='Appends human-readable title to episode filename if exists.')
 @click.option('--append-resolution', default=True, help='Appends video resolution to episode filemane.')
 def download(podcast_url: str, seasons: str, dir: str, append_show_name: bool, append_title: bool, append_resolution: bool):
     seasons_list = [int(x.strip()) for x in seasons.split(',')]
