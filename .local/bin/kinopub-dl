@@ -5,6 +5,7 @@ import feedparser
 import os
 import re
 import subprocess
+from pathvalidate import sanitize_filename
 
 class Episode:
     ''' Describes episode information based on given feed item. '''
@@ -32,7 +33,7 @@ class Episode:
             title += f' [{self.resolution}]'
         if extension and self.extension:
             title += f'.{self.extension}'
-        return title
+        return sanitize_filename(title)
 
     def download(self, dir: str, series: bool, title: bool, resolution: bool):
         ''' Downloads current episode. '''
