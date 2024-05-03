@@ -1,5 +1,11 @@
 First Time=true
 
+[Colors]
+Current Background=61,174,233
+Current Foreground=255,255,255
+KDE Default=false
+Marked Foreground=255,255,0
+
 [ListPanelButtons]
 Icons=true
 
@@ -10,3 +16,11 @@ Forward Button Visible=true
 Home Button Visible=true
 Rename Selects Extension=false
 Single Instance Mode=true
+
+[Startup][Left Tab Bar][Tabs][Tab0]
+Type=1
+Url=file:///
+
+[Startup][Right Tab Bar][Tabs][Tab0]
+Type=1
+Url=file:///
