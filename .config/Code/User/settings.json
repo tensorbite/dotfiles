@@ -9,6 +9,7 @@
   "editor.selectionClipboard": false,
   "editor.suggestSelection": "first",
   "editor.tabSize": 2,
+  "gitlens.currentLine.enabled": false,
   "phpcs.standard": "Drupal",
   "terminal.integrated.fontSize": 15,
   "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
