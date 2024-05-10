@@ -5,3 +5,6 @@ if status is-interactive
     ~/Projects/bin \
     ~/.gcp/google-cloud-sdk/bin
 end
+
+# Load .nvmrc from current directory and set desired node version.
+nvm_check
