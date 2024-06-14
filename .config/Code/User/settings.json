@@ -1,7 +1,7 @@
 {
   "composer.executablePath": "$HOME/.local/bin/composer",
   "debug.console.fontSize": 15,
-  "editor.fontFamily": "JetBrains Mono, Fira Code, Ubuntu Mono, Consolas",
+  "editor.fontFamily": "Jetbrains Mono Medium, Droid Sans Mono, monospace",
   "editor.fontLigatures": true,
   "editor.fontSize": 15,
   "editor.renderWhitespace": "selection",
