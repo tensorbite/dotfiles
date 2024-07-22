@@ -1,0 +1,4 @@
+[qt] # Qt interface
+
+# Show notification popup on track change (integer)
+qt-notification=0
