@@ -26,12 +26,12 @@ PATH_DIRS=(
   "$HOME/.local/bin"
   "$HOME/.composer/vendor/bin"
   "$HOME/Projects/bin"
-  "$HOME/Library/Python/3.9/lib/python/site-packages" # MacOS-specific.
+  "$HOME/Library/Python/3.9/lib/python/site-packages"
   "$HOME/miniconda3/bin"
   "/usr/local/anaconda/bin"
 )
-for PATH_DIR in ${PATH_DIRS[@]}; do
-  if [ -d "$PATH_DIR" ]; then
+for PATH_DIR in "${PATH_DIRS[@]}"; do
+  if [ -d "$PATH_DIR" ] && [[ ":$PATH:" != *":$PATH_DIR:"* ]]; then
     PATH="$PATH_DIR:$PATH"
   fi
 done
